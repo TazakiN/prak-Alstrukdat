@@ -3,57 +3,63 @@
 #include "wordmachine.h"
 #include "charmachine.h"
 
-// Returns string length
-int stringLength(char *s) {
-   int result =  0;
-   int i = 0;
-   while (s[i] != '\0') {
-      ++result;
-      ++i;
-   }
-   return result;
-}
-
 // Prints word from Mesin Kata
 void printWord(Word word) {
-   int i;
-   for (i = 0; i < word.Length; i++) {
-      printf("%c", word.TabWord[i]);
-   }
-}
-
-
-Word arWord[NMax];
-
-boolean compareWord(Word kata1, Word kata2) {
-    int m, n;
-    int len = kata1.Length;
-    boolean hasil = true, hasilHuruf = true;
-
-    for (m = 0; m < len; m++) {
-        for (n = 0; n < len; n++) {
-            if (kata1.TabWord[m] == kata2.TabWord[n]) {
-                break;
-            }
-            return false;
-        }
+    int i;
+    for (i = 0; i < word.Length; i++) {
+        printf("%c", word.TabWord[i]);
     }
-    return hasil;
 }
 
-int main()
-{
-    int indexArWord = 0;
-    int i, j, result = 0;
-    boolean lanjut = true;
+// bandingin kedua kata apakah kata1 lebih besar dari kata2 ato ngga
+boolean compareWords(Word kata1, Word kata2) {
+    int len1 = kata1.Length;
+    int len2 = kata2.Length;
+    int i = 0;
+    
+    while (i < len1 && i < len2) {
+        if (kata1.TabWord[i] < kata2.TabWord[i]) {
+            return false;
+        } else if (kata1.TabWord[i] > kata2.TabWord[i]) {
+            return true;
+        }
+        i++;
+    }
 
-    STARTWORD(); //cercaesoterica
-    while (!EndWord & currentChar!= MARK) {
+    if (i < len1) return true;
+    return 0;
+}
+
+int main() {
+    int indexArWord = 0;
+    int m, n;
+    Word arWord[100], temp;
+
+    STARTWORD();
+    while (!EndWord && currentChar != MARK) {
         arWord[indexArWord] = currentWord;
         indexArWord++;
         ADVWORD();
     }
+    arWord[indexArWord] = currentWord;
+    indexArWord++;
 
-    printf("%d\n",indexArWord);
+    // Urut secara leksikal
+    for (m = 0; m < indexArWord; m++) {
+        for (n = m + 1; n < indexArWord; n++) {
+            if (compareWords(arWord[m], arWord[n])) {
+                temp = arWord[m];
+                arWord[m] = arWord[n];
+                arWord[n] = temp;
+            }
+        }
+    }
+
+    // Print urutan
+    for (m = 0; m < indexArWord; m++) {
+        printWord(arWord[m]);
+        printf("\n");
+    }
+
     return 0;
 }
