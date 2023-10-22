@@ -3,63 +3,58 @@
 #include "wordmachine.h"
 #include "charmachine.h"
 
-// Returns string length
-int stringLength(char *s) {
-
-   int result =  0;
-
-   int i = 0;
-
-   while (s[i] != '\0') {
-
-      ++result;
-
-      ++i;
-
-   }
-
-   return result;
-
-}
-
 // Prints word from Mesin Kata
 void printWord(Word word) {
-
    int i;
-
    for (i = 0; i < word.Length; i++) {
-
       printf("%c", word.TabWord[i]);
-
    }
-
 }
-
-
-Word arWord[NMax];
 
 boolean compareWord(Word kata1, Word kata2) {
     int m, n;
     int len = kata1.Length;
-    boolean hasil = true, hasilHuruf = true;
+    char temp;
 
+    // sort karakter kata1
     for (m = 0; m < len; m++) {
-        for (n = 0; n < len; n++) {
-            if (kata1.TabWord[m] == kata2.TabWord[n]) {
-                break;
+        for (n = m; n < len; n++) {
+            if (kata1.TabWord[m] < kata1.TabWord[n]) {
+                temp = kata1.TabWord[m];
+                kata1.TabWord[m] = kata1.TabWord[n];
+                kata1.TabWord[n] = temp;
             }
+        }
+    }
+
+    // sort karakter kata2
+    for (m = 0; m < len; m++) {
+        for (n = m; n < len; n++) {
+            if (kata2.TabWord[m] < kata2.TabWord[n]) {
+                temp = kata2.TabWord[m];
+                kata2.TabWord[m] = kata2.TabWord[n];
+                kata2.TabWord[n] = temp;
+            }
+        }
+    }
+
+    // bandingin
+    for (m = 0; m < len; m++) {
+        if (kata1.TabWord[m] != kata2.TabWord[m]) {
             return false;
         }
     }
 
-    return hasil;
+    return true;
 }
+
 
 int main()
 {
     int indexArWord = 0;
     int i, j, result = 0;
     boolean lanjut = true;
+    Word arWord[100];
 
     STARTWORD();
     while (!EndWord & currentChar!= MARK) {
@@ -73,12 +68,13 @@ int main()
     for (i = 0; i < indexArWord; i++) {
         for (j = i+1; j < indexArWord; j++) {
             if (arWord[i].Length == arWord[j].Length) {
-                result++;
                 if (compareWord(arWord[i], arWord[j])) {
+                    result++;   
                 }
             }
         }
     }
+
     printf("%d\n",result);
     return 0;
 }
