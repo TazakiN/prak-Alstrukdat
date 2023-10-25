@@ -1,111 +1,161 @@
-#include "listlinier.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include "listlinier.h"
 
-Address newNode(ElType val) {
-    Address res = (Address)malloc(sizeof(Node));
-    if (res != NULL) {
-        INFO(res) = val; 
-        NEXT(res) = NULL; 
-    } 
-    return res;
-}
-
-void CreateList(List *l) {
-    FIRST(*l) = NULL;
-}
-
-boolean isEmpty(List l) {
-    return FIRST(l) == NULL;
-}
-
-ElType getElmt(List l, int idx) {
-    while (idx != 0) {
-        FIRST(l) = NEXT(l);
-        idx--;
+Address newNode(ElType val){
+    Address p = (Address)malloc(sizeof(Node));
+    if(p!=NULL){
+        INFO(p)=val;
+        NEXT(p)=NULL;
     }
-    return INFO(l);
+    return p;
 }
 
-void setElmt(List *l, int idx, ElType val) {
-    while (idx != 0) {
-        FIRST(*l) = NEXT(*l);
-        idx--;
+void CreateList(List *l){
+    FIRST(*l)=NULL;
+}
+
+boolean isEmpty(List l){
+    return FIRST(l)==NULL;
+}
+
+ElType getElmt(List l, int idx){
+    while(idx--){
+        FIRST(l)=NEXT(l);
+    } return INFO(l);
+}
+
+void setElmt(List*l,int idx,ElType val){
+    List p=*l;
+    while(idx--){
+        FIRST(p)=NEXT(p);
     }
-    INFO(*l);
+    INFO(p)=val;
 }
 
-int indexOf(List l, ElType val) {
-    boolean found = false;
-    int idxCOunter = 0;
-    while (l != NULL && !found) {
-        if (INFO(l) == val) {
-            found = true;
+int indexOf(List l, ElType val){
+    boolean found=false;int idx=0;
+    while(l!=NULL && !found){
+        if(INFO(l)==val){
+            found=true;
         } else {
-            FIRST(l) = NEXT(l);
-            idxCOunter++;
+            idx++;
+            FIRST(l)=NEXT(l);
         }
     }
-    if (found) return idxCOunter;
+    if(found) return idx;
     return IDX_UNDEF;
 }
 
-void insertFirst(List *l, ElType val) {
-    Address nodeBaru = newNode(val);
-    if (nodeBaru != NULL) {
-        // jadiin *l sebagai NEXT nya nodeBaru
-        NEXT(nodeBaru) = *l;
-        // jadiin nodeBaru sebagai awalan list.
-        *l = nodeBaru;
+void insertFirst(List *l, ElType val){
+    Address p = newNode(val);
+    if(p!=NULL){
+        NEXT(p)=*l;
+        *l=p;
     }
 }
 
-void insertLast(List *l, ElType val) {
-    if (isEmpty(*l)) {
-        insertFirst(l, val);
+void insertLast(List *l, ElType val){
+    if(isEmpty(*l)){
+        insertFirst(l,val);
     } else {
-        Address nodeBaru = newNode(val);
-        if(nodeBaru!=NULL){
+        Address p = newNode(val);
+        if(p!=NULL){
             Address last = *l;
-            while(NEXT(last) != NULL){
+            while(NEXT(last)!=NULL){
                 last = NEXT(last);
             }
-            NEXT(last)=nodeBaru;
+            NEXT(last)=p;
         }
     }
 }
 
-void insertAt(List *l, ElType val, int idx) {
-    if (idx == 0) {
-        insertFirst;
+void insertAt(List *l, ElType val, int idx){
+    if(idx==0){
+        insertFirst(l,val);
     } else {
-        Address nodeBaru = newNode(val);
-        if (nodeBaru != NULL) {
-            Address lokasi = *l;
-            while(idx != 0) {
-                lokasi = NEXT(lokasi);
-                idx--;
+        Address p = newNode(val);
+        if(p!=NULL){
+            int ctr=0;Address loc=*l;
+            while(ctr<idx-1){
+                ctr++;
+                loc=NEXT(loc);
             }
-            NEXT(nodeBaru) = NEXT(lokasi);
-            NEXT(lokasi) = nodeBaru;
+            NEXT(p)=NEXT(loc);
+            NEXT(loc)=p;
         }
     }
 }
 
-void deleteFirst(List *l, ElType *val);
+void deleteFirst(List *l, ElType *val){
+    Address p = *l;
+    *val = INFO(p);
+    *l=NEXT(p);
+    free(p);
+}
 
+void deleteLast(List *l, ElType *val){
+    Address p = *l, loc = NULL;
+    while(NEXT(p)!=NULL){
+        loc = p;
+        p = NEXT(p);
+    }
+    if(loc==NULL){
+        *l=NULL;
+    } else {
+        NEXT(loc)=NULL;
+    }
+    *val = INFO(p);
+    free(p);
+}
 
-void deleteLast(List *l, ElType *val);
+void deleteAt(List *l, int idx, ElType *val){
+    if(idx==0){
+        deleteFirst(l,val);
+    } else {
+        int ctr=0;Address loc=*l;
+        while(ctr<idx-1){
+            ctr++;
+            loc=NEXT(loc);
+        }
+        Address p = NEXT(loc);
+        *val = INFO(p);
+        NEXT(loc)=NEXT(p);
+        free(p);
+    }
+}
 
+void displayList(List l){
+    printf("[");
+    while(!isEmpty(l)){
+        printf("%d",INFO(l));
+        if(NEXT(l)!=NULL){
+            printf(",");
+        }
+        l=NEXT(l);
+    }
+    printf("]");
+}
 
-void deleteAt(List *l, int idx, ElType *val);
+int length(List l){
+    int cnt=0;
+    while(l!=NULL){
+        cnt++;
+        l=NEXT(l);
+    } return cnt;
+}
 
-
-void displayList(List l);
-
-
-int length(List l);
-
-
-List concat(List l1, List l2) ;
-
+List concat(List l1, List l2){
+    List l3;CreateList(&l3);
+    Address p = l1;
+    while(p!=NULL){
+        insertLast(&l3,INFO(p));
+        p=NEXT(p);
+    }
+    p=l2;
+    while(p!=NULL){
+        insertLast(&l3,INFO(p));
+        p=NEXT(p);
+    }
+    return l3;
+}
