@@ -83,6 +83,7 @@ void mergeSort(List* list) {
     List lFront, lBack;
 
     displayList(*list);
+    printf("\n");
     CreateList(&lFront); CreateList(&lBack);
 
     splitList(*list, &lFront, &lBack);
