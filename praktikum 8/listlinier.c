@@ -134,7 +134,7 @@ void displayList(List l){
         }
         l=NEXT(l);
     }
-    printf("]");
+    printf("]\n");
 }
 
 int length(List l){
@@ -158,4 +158,105 @@ List concat(List l1, List l2){
         p=NEXT(p);
     }
     return l3;
+}
+
+boolean fSearch(List L, Address P) {
+    Address p = L;
+    while (p != NULL) {
+        if (p == P) {
+            return true;
+        }
+        p = NEXT(p);
+    }
+    return false;
+}
+
+Address searchPrec(List L, ElType X) {
+    Address p = L;
+    // cek yang pertama
+    if (INFO(p) == X) {
+        return NULL;
+    }
+    // cek selain yang pertama
+    while (NEXT(p) != NULL) {
+        if (INFO(NEXT(p)) == X) {
+            return p;
+        }
+        p = NEXT(p);
+    }
+    return NULL;
+}
+
+ElType maxValue(List l) {
+    Address p = l;
+    ElType max = INFO(p);
+    while (p != NULL) {
+        if (INFO(p) > max) {
+            max = INFO(p);
+        }
+        p = NEXT(p);
+    }
+    return max;
+}
+
+Address adrMax(List l) {
+    ElType maxVal = maxValue(l);
+    Address p = l;
+    while (INFO(p) != maxVal) {
+        p = NEXT(p);
+    } // INFO(p) == maxVal
+    return p;
+}
+
+ElType minValue(List l) {
+    Address p = l;
+    ElType min = INFO(p);
+    while (p != NULL) {
+        if (INFO(p) < min) {
+            min = INFO(p);
+        }
+        p = NEXT(p);
+    }
+    return min;
+}
+
+Address adrMin(List l) {
+    ElType minVal = minValue(l);
+    Address p = l;
+    while (INFO(p) != minVal) {
+        p = NEXT(p);
+    } // INFO(p) == minVal
+    return p;
+}
+
+float average(List L) {
+    int count = 0, sum = 0; 
+    Address p = L;
+    while (p != NULL) {
+        sum += INFO(p);
+        count++;
+        p = NEXT(p);
+    }
+    return (float) sum / count;
+}
+
+void deleteAll(List *l) {
+    ElType buang;
+    while (length(*l) != 0) {
+        deleteFirst(l, &buang);
+    }
+}
+
+void copyList(List *l1, List *l2) {
+    *l2 = *l1;
+}
+
+void inverseList(List *l) {
+    int len = length(*l), i, idxInsert = 0;
+    ElType val;
+    for (i = 0; i < len; i++) {
+        deleteLast(l, &val);
+        insertAt(l, val, idxInsert);
+        idxInsert++;
+    }
 }
