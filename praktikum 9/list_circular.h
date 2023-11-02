@@ -1,10 +1,10 @@
-/* File : listcircular.h */
+/* File : list_circular.h */
 /* ADT List Sirkuler dengan elemen terakhir menunjuk pada elemen pertama */
 /* Representasi berkait dengan Address adalah pointer */
 /* ElType adalah integer */
 
-#ifndef LISTCIRCULAR_H
-#define LISTCIRCULAR_H
+#ifndef LIST_CIRCULAR_H
+#define LIST_CIRCULAR_H
 
 #include "boolean.h"
 
